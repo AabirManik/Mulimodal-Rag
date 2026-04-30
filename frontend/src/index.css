@@ -1,0 +1,193 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+/* ─── Neobrutalism Design System ─────────────────────────── */
+
+@theme {
+  --color-bg: #0A0A0A;
+  --color-card: #111111;
+  --color-card-hover: #1A1A1A;
+  --color-accent: #00FFAA;
+  --color-accent-dim: #00CC88;
+  --color-accent-glow: rgba(0, 255, 170, 0.15);
+  --color-border: #FFFFFF;
+  --color-border-dim: #333333;
+  --color-text: #FFFFFF;
+  --color-text-dim: #999999;
+  --color-text-muted: #666666;
+  --color-danger: #FF4444;
+  --color-warning: #FFAA00;
+  --color-user-msg: #1A1A2E;
+  --color-ai-msg: #0D1117;
+
+  --font-family-display: 'Space Grotesk', sans-serif;
+  --font-family-mono: 'JetBrains Mono', monospace;
+  --font-family-body: 'Inter', sans-serif;
+}
+
+/* ─── Base Reset ─────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-family-body);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ─── Scrollbar ──────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-dim);
+  border: 1px solid var(--color-bg);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
+}
+
+/* ─── Neobrutalism Utility Classes ───────────────────────── */
+.neo-border {
+  border: 2.5px solid var(--color-border);
+}
+
+.neo-border-accent {
+  border: 2.5px solid var(--color-accent);
+}
+
+.neo-border-dim {
+  border: 2px solid var(--color-border-dim);
+}
+
+.neo-card {
+  background: var(--color-card);
+  border: 2.5px solid var(--color-border);
+  padding: 1rem;
+}
+
+.neo-card-accent {
+  background: var(--color-card);
+  border: 2.5px solid var(--color-accent);
+  padding: 1rem;
+}
+
+.neo-shadow {
+  box-shadow: 4px 4px 0px var(--color-border);
+}
+
+.neo-shadow-accent {
+  box-shadow: 4px 4px 0px var(--color-accent);
+}
+
+.neo-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  font-family: var(--font-family-display);
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: 2.5px solid var(--color-border);
+  background: var(--color-card);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: all 0.1s ease;
+  user-select: none;
+}
+
+.neo-btn:hover {
+  background: var(--color-accent);
+  color: var(--color-bg);
+  box-shadow: 4px 4px 0px var(--color-border);
+  transform: translate(-2px, -2px);
+}
+
+.neo-btn:active {
+  transform: translate(0, 0);
+  box-shadow: none;
+}
+
+.neo-btn-accent {
+  background: var(--color-accent);
+  color: var(--color-bg);
+  border-color: var(--color-border);
+}
+
+.neo-btn-accent:hover {
+  background: var(--color-accent-dim);
+  box-shadow: 4px 4px 0px var(--color-accent);
+}
+
+.neo-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-family: var(--font-family-body);
+  font-size: 1rem;
+  background: var(--color-card);
+  color: var(--color-text);
+  border: 2.5px solid var(--color-border);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.neo-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.neo-input:focus {
+  border-color: var(--color-accent);
+}
+
+/* ─── Animations ─────────────────────────────────────────── */
+@keyframes pulse-accent {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@keyframes blink-cursor {
+  0%, 50% { border-right-color: var(--color-accent); }
+  51%, 100% { border-right-color: transparent; }
+}
+
+.animate-pulse-accent {
+  animation: pulse-accent 1.5s ease-in-out infinite;
+}
+
+.animate-blink {
+  animation: blink-cursor 1s step-end infinite;
+}
+
+/* ─── Typography ─────────────────────────────────────────── */
+.font-display {
+  font-family: var(--font-family-display);
+}
+
+.font-mono {
+  font-family: var(--font-family-mono);
+}
+
+/* ─── Selection ──────────────────────────────────────────── */
+::selection {
+  background: var(--color-accent);
+  color: var(--color-bg);
+}

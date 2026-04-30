@@ -1,0 +1,12 @@
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+python-multipart==0.0.6
+sentence-transformers==2.2.2
+faiss-cpu==1.7.4
+PyPDF2==3.0.1
+vosk==0.3.45
+Pillow==10.1.0
+requests==2.31.0
+pydantic==2.5.2
+python-jose==3.3.0
+aiofiles==23.2.1
