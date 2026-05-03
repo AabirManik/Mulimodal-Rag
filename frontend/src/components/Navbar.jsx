@@ -1,5 +1,5 @@
 /**
- * Navbar — Top navigation bar with logo and offline status badge.
+ * Navbar — Top navigation bar with logo and status badge.
  */
 
 import { motion } from 'framer-motion';
@@ -8,64 +8,47 @@ import { IoShieldCheckmark } from 'react-icons/io5';
 import useChatStore from '../store/chatStore';
 
 export default function Navbar() {
-  const { goHome, health } = useChatStore();
-  const ollamaOnline = health?.ollama?.status === 'online';
+  const { goHome } = useChatStore();
 
   return (
     <motion.nav
       initial={{ y: -60 }}
       animate={{ y: 0 }}
-      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-3"
-      style={{
-        background: 'var(--color-bg)',
-        borderBottom: '2.5px solid var(--color-border)',
-      }}
+      transition={{ type: 'spring', stiffness: 200, damping: 25 }}
+      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-4 glass-panel border-b-white/5"
     >
       {/* Left: Logo + Title */}
       <button
         onClick={goHome}
-        className="flex items-center gap-3 cursor-pointer bg-transparent border-none"
-        style={{ color: 'var(--color-text)' }}
+        className="flex items-center gap-4 group transition-all duration-300"
       >
-        <div
-          className="flex items-center justify-center w-9 h-9"
-          style={{
-            background: 'var(--color-accent)',
-            border: '2px solid var(--color-border)',
-          }}
-        >
-          <HiOutlineCpuChip size={20} color="#0A0A0A" />
+        <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-accent/10 border border-accent/30 group-hover:bg-accent group-hover:scale-110 transition-all duration-300 shadow-[0_0_20px_rgba(0,255,170,0.1)]">
+          <HiOutlineCpuChip size={22} className="text-accent group-hover:text-bg transition-colors" />
         </div>
-        <span
-          className="font-display text-lg font-bold tracking-wide"
-          style={{ fontFamily: 'var(--font-family-display)' }}
-        >
-          RAG ASSISTANT
-        </span>
+        <div className="flex flex-col items-start leading-none">
+          <span className="font-display text-xl font-black tracking-tighter text-white">
+            RAG ASSISTANT
+          </span>
+          <span className="text-[9px] font-mono font-bold tracking-[0.2em] text-accent/70 mt-1">
+            HYBRID INTELLIGENCE
+          </span>
+        </div>
       </button>
 
       {/* Right: Status */}
-      <div className="flex items-center gap-4">
-        <div
-          className="flex items-center gap-2 px-3 py-1.5 text-xs font-bold uppercase tracking-widest"
-          style={{
-            border: `2px solid ${ollamaOnline ? 'var(--color-accent)' : 'var(--color-danger)'}`,
-            color: ollamaOnline ? 'var(--color-accent)' : 'var(--color-danger)',
-            fontFamily: 'var(--font-family-mono)',
-          }}
-        >
-          <IoShieldCheckmark size={14} />
-          <span>Offline Mode</span>
-          <span
-            className="w-2 h-2 rounded-full"
-            style={{
-              background: ollamaOnline ? 'var(--color-accent)' : 'var(--color-danger)',
-              boxShadow: ollamaOnline
-                ? '0 0 8px var(--color-accent)'
-                : '0 0 8px var(--color-danger)',
-            }}
-          />
+      <div className="flex items-center gap-6">
+        <div className="hidden md:flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5">
+          <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse shadow-[0_0_8px_#00FFAA]" />
+          <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-text-dim">
+            Groq API Online
+          </span>
+        </div>
+        
+        <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-accent/30 bg-accent/5">
+          <IoShieldCheckmark size={14} className="text-accent" />
+          <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-accent">
+            Cloud Enhanced
+          </span>
         </div>
       </div>
     </motion.nav>

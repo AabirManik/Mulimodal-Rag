@@ -36,7 +36,7 @@ export default function InitialView() {
       ref: pdfRef,
       accept: '.pdf',
       modality: 'pdf',
-      color: '#FF6B6B',
+      color: '#FF3366',
     },
     {
       label: 'Image',
@@ -44,7 +44,7 @@ export default function InitialView() {
       ref: imgRef,
       accept: '.jpg,.jpeg,.png,.gif,.webp',
       modality: 'image',
-      color: '#4ECDC4',
+      color: '#00FFAA',
     },
     {
       label: 'Audio',
@@ -52,132 +52,143 @@ export default function InitialView() {
       ref: audioRef,
       accept: '.wav,.mp3,.ogg,.flac,.m4a',
       modality: 'audio',
-      color: '#FFE66D',
+      color: '#00CCFF',
     },
   ];
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen px-6 pt-16">
-      {/* Title */}
+    <div className="relative flex flex-col items-center justify-center min-h-screen px-6 overflow-hidden">
+      {/* Decorative Background Elements */}
+      <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-accent-glow rounded-full blur-[100px] animate-pulse" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-[120px] animate-pulse" />
+
+      {/* Title Section */}
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="text-center mb-12"
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="text-center mb-16 relative z-10"
       >
+        <div className="inline-block px-4 py-1 mb-6 text-xs font-mono tracking-widest text-accent border border-accent/30 bg-accent/5 rounded-full reveal-anim">
+          HYBRID RAG ASSISTANT
+        </div>
         <h1
-          className="text-5xl md:text-6xl font-bold mb-4 tracking-tight"
+          className="text-6xl md:text-8xl font-bold mb-6 tracking-tighter reveal-anim"
           style={{ fontFamily: 'var(--font-family-display)' }}
         >
-          Query Your
-          <br />
-          <span style={{ color: 'var(--color-accent)' }}>Local Knowledge</span>
+          Query Your <br />
+          <span className="accent-gradient glow-text">Knowledge</span>
         </h1>
         <p
-          className="text-lg max-w-md mx-auto"
-          style={{ color: 'var(--color-text-dim)' }}
+          className="text-lg md:text-xl max-w-xl mx-auto text-text-dim leading-relaxed reveal-anim"
+          style={{ animationDelay: '0.1s' }}
         >
-          Upload documents, images, or audio — then ask anything. 100% offline.
+          A powerful, multimodal workspace. Upload documents, images, or audio—then chat with your data in real-time.
         </p>
       </motion.div>
 
-      {/* Input Box */}
-      <motion.form
-        onSubmit={handleSubmit}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-        className="w-full max-w-2xl mb-8"
+      {/* Main Action Area */}
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5, delay: 0.3 }}
+        className="w-full max-w-3xl z-10"
       >
-        <div className="relative flex items-center" style={{ border: '2.5px solid var(--color-border)' }}>
-          <input
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Ask a question about your documents..."
-            className="flex-1 px-5 py-4 text-lg bg-transparent outline-none"
-            style={{
-              color: 'var(--color-text)',
-              fontFamily: 'var(--font-family-body)',
-              border: 'none',
-            }}
-          />
-          <button
-            type="submit"
-            disabled={!query.trim()}
-            className="flex items-center justify-center w-14 h-14 cursor-pointer"
-            style={{
-              background: query.trim() ? 'var(--color-accent)' : 'var(--color-border-dim)',
-              border: 'none',
-              borderLeft: '2.5px solid var(--color-border)',
-              transition: 'background 0.15s',
-            }}
-          >
-            <HiPaperAirplane size={20} color="#0A0A0A" />
-          </button>
-        </div>
-      </motion.form>
-
-      {/* Upload Buttons */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.4 }}
-        className="flex gap-4 flex-wrap justify-center mb-6"
-      >
-        {uploadButtons.map((btn) => (
-          <div key={btn.modality}>
-            <input
-              ref={btn.ref}
-              type="file"
-              accept={btn.accept}
-              className="hidden"
-              onChange={(e) => handleFileUpload(e.target.files[0], btn.modality)}
-            />
-            <button
-              onClick={() => btn.ref.current?.click()}
-              disabled={isIngesting}
-              className="neo-btn"
-              style={{
-                borderColor: btn.color,
-                minWidth: '140px',
-                justifyContent: 'center',
-              }}
-            >
-              {btn.icon}
-              <span>Upload {btn.label}</span>
-            </button>
+        {/* Input Form */}
+        <form
+          onSubmit={handleSubmit}
+          className="relative mb-10 group"
+        >
+          <div className="glass-panel p-1 rounded-2xl border-2 border-border-bright group-focus-within:border-accent transition-all duration-300 shadow-2xl">
+            <div className="flex items-center gap-2 px-4 py-2">
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Ask anything about your data..."
+                className="flex-1 bg-transparent border-none outline-none text-xl py-4 px-2 placeholder:text-text-muted"
+                style={{ fontFamily: 'var(--font-family-body)' }}
+              />
+              <button
+                type="submit"
+                disabled={!query.trim()}
+                className={`flex items-center justify-center w-14 h-14 rounded-xl transition-all duration-300 ${
+                  query.trim() 
+                    ? 'bg-accent text-bg shadow-[0_0_20px_rgba(0,255,170,0.4)] translate-y-0' 
+                    : 'bg-border-bright text-text-muted cursor-not-allowed'
+                }`}
+              >
+                <HiPaperAirplane size={22} className={query.trim() ? 'rotate-0' : 'rotate-12 opacity-50'} />
+              </button>
+            </div>
           </div>
-        ))}
+        </form>
+
+        {/* Upload Quick-Actions */}
+        <div className="flex flex-wrap justify-center gap-6">
+          {uploadButtons.map((btn, idx) => (
+            <motion.div 
+              key={btn.modality}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 + (idx * 0.1) }}
+            >
+              <input
+                ref={btn.ref}
+                type="file"
+                accept={btn.accept}
+                className="hidden"
+                onChange={(e) => handleFileUpload(e.target.files[0], btn.modality)}
+              />
+              <button
+                onClick={() => btn.ref.current?.click()}
+                disabled={isIngesting}
+                className="group flex flex-col items-center gap-3"
+              >
+                <div 
+                  className="w-16 h-16 flex items-center justify-center rounded-2xl border-2 transition-all duration-300 group-hover:scale-110 group-active:scale-95 shadow-xl"
+                  style={{ 
+                    borderColor: btn.color + '44', 
+                    background: btn.color + '11',
+                    color: btn.color 
+                  }}
+                >
+                  {btn.icon}
+                </div>
+                <span className="text-xs font-mono font-bold tracking-wider text-text-dim group-hover:text-white transition-colors">
+                  {btn.label}
+                </span>
+              </button>
+            </motion.div>
+          ))}
+        </div>
       </motion.div>
 
-      {/* Ingest Progress */}
+      {/* Ingest Progress Overlay */}
       {ingestProgress && (
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="px-5 py-3 text-sm font-mono"
-          style={{
-            border: '2px solid var(--color-accent)',
-            color: 'var(--color-accent)',
-            fontFamily: 'var(--font-family-mono)',
-            background: 'var(--color-accent-glow)',
-          }}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="fixed bottom-12 left-1/2 -translate-x-1/2 px-8 py-4 glass-panel rounded-full border border-accent/50 shadow-[0_0_40px_rgba(0,255,170,0.2)] flex items-center gap-4 z-50"
         >
-          {ingestProgress}
+          <div className="w-3 h-3 bg-accent rounded-full animate-pulse shadow-[0_0_10px_#00FFAA]" />
+          <span className="font-mono text-xs font-bold text-accent tracking-tighter uppercase">
+            {ingestProgress}
+          </span>
         </motion.div>
       )}
 
-      {/* Keyboard hint */}
-      <motion.p
+      {/* Footer Hint */}
+      <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 0.8 }}
-        className="mt-8 text-xs"
-        style={{ color: 'var(--color-text-muted)', fontFamily: 'var(--font-family-mono)' }}
+        transition={{ delay: 1.2 }}
+        className="absolute bottom-8 text-center"
       >
-        Upload files to build your knowledge base, then ask questions
-      </motion.p>
+        <p className="text-[10px] font-mono uppercase tracking-[0.3em] text-text-muted">
+          Secured with Groq & HuggingFace
+        </p>
+      </motion.div>
     </div>
   );
 }
