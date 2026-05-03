@@ -1,12 +1,28 @@
 """
-Image Processor — Uses LLaVA (via Ollama) to generate captions for images.
+Image Processor — Uses LLaVA (via Ollama) or Donut (via Hugging Face) to process images.
 """
 
 import base64
 import requests
 from pathlib import Path
-from typing import Dict, List
-from backend.config import OLLAMA_BASE_URL, VISION_MODEL
+from typing import Dict, List, Optional
+from backend.config import (
+    OLLAMA_BASE_URL, 
+    VISION_MODEL, 
+    VISION_PROVIDER, 
+    HF_VISION_MODEL_NAME
+)
+
+# Lazy loading for Hugging Face pipeline
+_hf_vision_pipe = None
+
+def get_hf_vision_pipe():
+    global _hf_vision_pipe
+    if _hf_vision_pipe is None:
+        from transformers import pipeline
+        print(f"[ImageProcessor] Loading HF Vision model: {HF_VISION_MODEL_NAME}...")
+        _hf_vision_pipe = pipeline("document-question-answering", model=HF_VISION_MODEL_NAME)
+    return _hf_vision_pipe
 
 
 def encode_image_to_base64(file_path: str) -> str:
@@ -17,8 +33,16 @@ def encode_image_to_base64(file_path: str) -> str:
 
 def caption_image(file_path: str) -> str:
     """
-    Send image to LLaVA via Ollama and get a descriptive caption.
+    Get a description or extraction from the image using the configured provider.
     """
+    if VISION_PROVIDER == "huggingface":
+        return _caption_hf(file_path)
+    else:
+        return _caption_ollama(file_path)
+
+
+def _caption_ollama(file_path: str) -> str:
+    """Send image to LLaVA via Ollama."""
     image_b64 = encode_image_to_base64(file_path)
 
     payload = {
@@ -47,6 +71,23 @@ def caption_image(file_path: str) -> str:
         return f"[Error captioning image: {str(e)}]"
 
 
+def _caption_hf(file_path: str) -> str:
+    """Process image using Hugging Face Donut model."""
+    try:
+        pipe = get_hf_vision_pipe()
+        # For Donut, we use it for a general "What is in this document?" question to extract text/context
+        result = pipe(
+            image=file_path,
+            question="What is the content of this document?"
+        )
+        # result is usually a list of dicts: [{'answer': '...'}]
+        if isinstance(result, list) and len(result) > 0:
+            return result[0].get("answer", "No answer found.")
+        return str(result)
+    except Exception as e:
+        return f"[Error processing with HF Vision: {str(e)}]"
+
+
 def process_image(file_path: str) -> List[Dict]:
     """
     Process an image file: generate caption and return as document chunk.
@@ -55,7 +96,7 @@ def process_image(file_path: str) -> List[Dict]:
     filename = Path(file_path).name
 
     return [{
-        "content": f"[Image: {filename}] {caption}",
+        "content": f"[Image Analysis: {filename}] {caption}",
         "metadata": {
             "source": filename,
             "modality": "image",

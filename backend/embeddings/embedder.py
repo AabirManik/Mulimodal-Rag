@@ -5,7 +5,7 @@ Embedder — Sentence Transformer embedding model with singleton pattern.
 import numpy as np
 from typing import List
 from sentence_transformers import SentenceTransformer
-from backend.config import EMBEDDING_MODEL_NAME, EMBEDDING_DIMENSION
+from backend.config import EMBEDDING_MODEL_NAME, EMBEDDING_DIMENSION, HUGGINGFACE_TOKEN
 
 
 class Embedder:
@@ -24,7 +24,12 @@ class Embedder:
     def _load_model(self):
         if self._model is None:
             print(f"[Embedder] Loading model: {EMBEDDING_MODEL_NAME}...")
-            self._model = SentenceTransformer(EMBEDDING_MODEL_NAME)
+            # Pass use_auth_token if HUGGINGFACE_TOKEN is provided
+            model_kwargs = {}
+            if HUGGINGFACE_TOKEN:
+                model_kwargs["use_auth_token"] = HUGGINGFACE_TOKEN
+            
+            self._model = SentenceTransformer(EMBEDDING_MODEL_NAME, **model_kwargs)
             print(f"[Embedder] Model loaded. Dimension: {EMBEDDING_DIMENSION}")
 
     def embed(self, texts: List[str]) -> np.ndarray:
