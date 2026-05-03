@@ -3,9 +3,11 @@ __pycache__/
 *.py[cod]
 *$py.class
 *.so
-venv/
-env/
 .env
+.env.*
+.venv
+env/
+venv/
 *.egg-info/
 dist/
 build/
@@ -13,13 +15,17 @@ build/
 # Backend data (generated at runtime)
 backend/data/
 backend/models/
+backend/sessions/
+backend/__pycache__/
 
-# Node
+# Node / Frontend
 node_modules/
 frontend/dist/
 frontend/.vite/
+frontend/.env
+frontend/.env.*
 
-# IDE
+# IDEs
 .vscode/
 .idea/
 *.swp
@@ -28,8 +34,3 @@ frontend/.vite/
 # OS
 .DS_Store
 Thumbs.db
-desktop.ini
-
-# Logs
-*.log
-npm-debug.log*
