@@ -8,19 +8,12 @@ import SourceCard from './SourceCard';
 export function UserMessage({ message }) {
   return (
     <motion.div
-      initial={{ opacity: 0, x: 30 }}
-      animate={{ opacity: 1, x: 0 }}
-      className="flex justify-end mb-4"
+      initial={{ opacity: 0, y: 10, scale: 0.98 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      className="flex justify-end mb-6"
     >
-      <div
-        className="max-w-xl px-5 py-3"
-        style={{
-          background: 'var(--color-user-msg)',
-          border: '2.5px solid var(--color-border)',
-          boxShadow: '3px 3px 0px var(--color-border)',
-        }}
-      >
-        <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text)' }}>
+      <div className="max-w-xl message-user p-4 rounded-2xl rounded-tr-none shadow-xl reveal-anim">
+        <p className="text-[15px] leading-relaxed text-white">
           {message.content}
         </p>
       </div>
@@ -34,57 +27,62 @@ export function AIMessage({ message }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: -30 }}
-      animate={{ opacity: 1, x: 0 }}
-      className="flex items-start gap-3 mb-6 max-w-3xl"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="flex items-start gap-4 mb-10 max-w-4xl reveal-anim"
     >
-      <div
-        className="w-8 h-8 flex items-center justify-center shrink-0 mt-1"
-        style={{ background: 'var(--color-accent)', border: '2px solid var(--color-border)' }}
-      >
-        <span className="text-sm font-bold" style={{ color: 'var(--color-bg)' }}>AI</span>
+      {/* AI Avatar */}
+      <div className="w-10 h-10 flex items-center justify-center shrink-0 mt-1 rounded-xl glass-panel border border-accent/30 shadow-[0_0_15px_rgba(0,255,170,0.2)]">
+        <div className="w-5 h-5 bg-accent rounded-sm animate-pulse" style={{ clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)' }} />
       </div>
 
-      <div className="flex-1 space-y-3">
-        {/* Answer */}
-        <div className="p-4" style={{ background: 'var(--color-ai-msg)', border: '2.5px solid var(--color-border-dim)' }}>
-          <p className="text-xs font-bold uppercase tracking-widest mb-2"
-            style={{ color: 'var(--color-accent)', fontFamily: 'var(--font-family-mono)' }}>
-            Answer
-          </p>
-          <p className="text-sm leading-relaxed whitespace-pre-wrap" style={{ color: 'var(--color-text)' }}>
+      <div className="flex-1 space-y-4">
+        {/* Answer Section */}
+        <div className="glass-panel p-6 rounded-2xl rounded-tl-none border-border-bright/50 shadow-2xl">
+          <div className="flex items-center gap-2 mb-4 opacity-70">
+            <div className="w-1.5 h-1.5 bg-accent rounded-full" />
+            <p className="text-[10px] font-mono font-black uppercase tracking-[0.2em] text-accent">
+              Insight Generation
+            </p>
+          </div>
+          <p className="text-[15px] leading-relaxed text-text-dim whitespace-pre-wrap">
             {message.content}
           </p>
         </div>
 
-        {/* Key Points */}
+        {/* Key Points Section */}
         {hasKeyPoints && (
-          <div className="p-4" style={{ background: 'var(--color-card)', border: '2px solid var(--color-accent)' }}>
-            <p className="text-xs font-bold uppercase tracking-widest mb-2"
-              style={{ color: 'var(--color-accent)', fontFamily: 'var(--font-family-mono)' }}>
-              Key Points
-            </p>
-            <ul className="space-y-1.5">
-              {message.keyPoints.map((point, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm" style={{ color: 'var(--color-text-dim)' }}>
-                  <span style={{ color: 'var(--color-accent)' }}>▸</span>
-                  <span>{point}</span>
-                </li>
-              ))}
-            </ul>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {message.keyPoints.map((point, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.1 }}
+                className="p-4 bg-white/5 border border-white/10 rounded-xl flex items-start gap-3 hover:bg-white/10 transition-colors group"
+              >
+                <div className="w-1.5 h-1.5 bg-accent rounded-full mt-1.5 group-hover:scale-125 transition-transform" />
+                <span className="text-sm text-text-dim leading-snug">{point}</span>
+              </motion.div>
+            ))}
           </div>
         )}
 
-        {/* Sources */}
+        {/* Sources Section */}
         {hasSources && (
-          <div>
-            <p className="text-xs font-bold uppercase tracking-widest mb-2"
-              style={{ color: 'var(--color-text-muted)', fontFamily: 'var(--font-family-mono)' }}>
-              Sources ({message.sources.length})
-            </p>
-            {message.sources.map((source, i) => (
-              <SourceCard key={i} source={source} />
-            ))}
+          <div className="pt-2">
+            <div className="flex items-center gap-3 mb-3">
+              <span className="h-[1px] flex-1 bg-border-bright/30" />
+              <p className="text-[10px] font-mono font-bold uppercase tracking-widest text-text-muted">
+                Reference Base ({message.sources.length})
+              </p>
+              <span className="h-[1px] flex-1 bg-border-bright/30" />
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {message.sources.map((source, i) => (
+                <SourceCard key={i} source={source} />
+              ))}
+            </div>
           </div>
         )}
       </div>

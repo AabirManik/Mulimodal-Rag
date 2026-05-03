@@ -1,9 +1,9 @@
 /**
- * InputBar — Fixed bottom input with text field and file upload buttons.
+ * InputBar — Floating glass-morphism input bar with file upload and send action.
  */
 
 import { useState, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { HiPaperAirplane } from 'react-icons/hi2';
 import { HiOutlineDocumentText, HiOutlinePhotograph, HiOutlineMicrophone } from 'react-icons/hi';
 import useChatStore from '../store/chatStore';
@@ -29,49 +29,83 @@ export default function InputBar() {
   };
 
   const uploadBtns = [
-    { ref: pdfRef, accept: '.pdf', modality: 'pdf', icon: <HiOutlineDocumentText size={16} />, color: '#FF6B6B' },
-    { ref: imgRef, accept: '.jpg,.jpeg,.png,.gif,.webp', modality: 'image', icon: <HiOutlinePhotograph size={16} />, color: '#4ECDC4' },
-    { ref: audioRef, accept: '.wav,.mp3,.ogg,.flac,.m4a', modality: 'audio', icon: <HiOutlineMicrophone size={16} />, color: '#FFE66D' },
+    { ref: pdfRef, accept: '.pdf', modality: 'pdf', icon: <HiOutlineDocumentText size={20} />, color: '#FF3366' },
+    { ref: imgRef, accept: '.jpg,.jpeg,.png,.gif,.webp', modality: 'image', icon: <HiOutlinePhotograph size={20} />, color: '#00FFAA' },
+    { ref: audioRef, accept: '.wav,.mp3,.ogg,.flac,.m4a', modality: 'audio', icon: <HiOutlineMicrophone size={20} />, color: '#00CCFF' },
   ];
 
   return (
-    <div className="shrink-0" style={{ borderTop: '2.5px solid var(--color-border)', background: 'var(--color-bg)' }}>
-      {/* Ingest progress */}
-      {ingestProgress && (
-        <div className="px-4 py-2 text-xs" style={{ color: 'var(--color-accent)', fontFamily: 'var(--font-family-mono)', background: 'var(--color-accent-glow)', borderBottom: '1px solid var(--color-accent)' }}>
-          {ingestProgress}
-        </div>
-      )}
+    <div className="p-6 relative z-30">
+      {/* Ingest progress toast-like notification */}
+      <AnimatePresence>
+        {ingestProgress && (
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            className="absolute -top-10 left-1/2 -translate-x-1/2 px-4 py-1.5 glass-panel rounded-full border border-accent/30 text-[10px] font-mono text-accent uppercase tracking-tighter"
+          >
+            {ingestProgress}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      <form onSubmit={handleSubmit} className="flex items-center gap-0">
-        {/* Upload buttons */}
-        <div className="flex items-center pl-2 gap-1">
+      <form 
+        onSubmit={handleSubmit} 
+        className={`glass-panel max-w-4xl mx-auto flex items-center gap-2 p-1.5 rounded-2xl border-2 transition-all duration-300 shadow-2xl ${
+          isLoading ? 'opacity-70 pointer-events-none' : 'border-border-bright group-focus-within:border-accent'
+        }`}
+      >
+        {/* Upload Action Group */}
+        <div className="flex items-center gap-1 pl-2">
           {uploadBtns.map((btn) => (
-            <div key={btn.modality}>
-              <input ref={btn.ref} type="file" accept={btn.accept} className="hidden"
-                onChange={(e) => handleFile(e.target.files[0], btn.modality)} />
-              <button type="button" onClick={() => btn.ref.current?.click()} disabled={isLoading}
-                className="p-2 cursor-pointer" title={`Upload ${btn.modality}`}
-                style={{ background: 'transparent', border: 'none', color: btn.color, opacity: isLoading ? 0.4 : 1, transition: 'opacity 0.15s' }}>
+            <div key={btn.modality} className="relative">
+              <input 
+                ref={btn.ref} 
+                type="file" 
+                accept={btn.accept} 
+                className="hidden"
+                onChange={(e) => handleFile(e.target.files[0], btn.modality)} 
+              />
+              <button 
+                type="button" 
+                onClick={() => btn.ref.current?.click()} 
+                disabled={isLoading}
+                className="w-10 h-10 flex items-center justify-center rounded-xl transition-all duration-200 hover:bg-white/10 active:scale-90"
+                style={{ color: btn.color }}
+                title={`Upload ${btn.modality}`}
+              >
                 {btn.icon}
               </button>
             </div>
           ))}
         </div>
 
-        {/* Text input */}
+        {/* Divider */}
+        <div className="w-[1px] h-8 bg-white/10 mx-1" />
+
+        {/* Query Input */}
         <input
-          type="text" value={text} onChange={(e) => setText(e.target.value)}
-          placeholder={isLoading ? 'Processing...' : 'Ask a question...'} disabled={isLoading}
-          className="flex-1 px-4 py-4 text-sm bg-transparent outline-none"
-          style={{ color: 'var(--color-text)', border: 'none', fontFamily: 'var(--font-family-body)' }}
+          type="text" 
+          value={text} 
+          onChange={(e) => setText(e.target.value)}
+          placeholder={isLoading ? 'Analyzing knowledge base...' : 'Ask a follow-up question...'} 
+          disabled={isLoading}
+          className="flex-1 px-4 py-3 bg-transparent border-none outline-none text-white text-base placeholder:text-text-muted"
+          style={{ fontFamily: 'var(--font-family-body)' }}
         />
 
-        {/* Send */}
-        <button type="submit" disabled={!text.trim() || isLoading}
-          className="flex items-center justify-center w-12 h-12 mr-2 cursor-pointer"
-          style={{ background: text.trim() && !isLoading ? 'var(--color-accent)' : 'var(--color-border-dim)', border: '2px solid var(--color-border)', transition: 'background 0.15s' }}>
-          <HiPaperAirplane size={16} color="#0A0A0A" />
+        {/* Send Button */}
+        <button 
+          type="submit" 
+          disabled={!text.trim() || isLoading}
+          className={`w-12 h-12 flex items-center justify-center rounded-xl transition-all duration-300 ${
+            text.trim() && !isLoading 
+              ? 'bg-accent text-bg shadow-[0_0_15px_rgba(0,255,170,0.3)]' 
+              : 'bg-white/5 text-text-muted'
+          }`}
+        >
+          <HiPaperAirplane size={20} className={text.trim() && !isLoading ? 'rotate-0' : 'rotate-12 opacity-50'} />
         </button>
       </form>
     </div>
