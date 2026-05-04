@@ -275,7 +275,7 @@ Rag_Model/
 
 ---
 
-## 📡 API Endpoints & Test Cases
+## 📡 API Endpoints
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -283,18 +283,73 @@ Rag_Model/
 | `POST` | `/api/ingest` | Upload & ingest file (PDF/image/audio) |
 | `POST` | `/api/query` | Send query, get RAG response |
 | `POST` | `/api/sessions` | Create new chat session |
+| `GET` | `/api/sessions` | List all sessions |
+| `GET` | `/api/sessions/{id}` | Get session with history |
+| `DELETE` | `/api/sessions/{id}` | Delete a session |
 | `GET` | `/api/vectorstore/stats` | Vector store statistics |
+| `POST` | `/api/vectorstore/clear` | Clear all vectors |
 
-**Example: PDF Query Test**
+---
+
+## 🧪 Test Cases
+
+### 1. PDF Query
 ```bash
 # Ingest a PDF
-curl -X POST http://localhost:8000/api/ingest -F "file=@document.pdf" -F "modality=pdf"
+curl -X POST http://localhost:8000/api/ingest \
+  -F "file=@document.pdf" -F "modality=pdf"
 
 # Query it
 curl -X POST http://localhost:8000/api/query \
   -H "Content-Type: application/json" \
   -d '{"question": "What is the main topic of this document?"}'
 ```
+
+### 2. Image Reasoning
+```bash
+curl -X POST http://localhost:8000/api/ingest \
+  -F "file=@photo.jpg" -F "modality=image"
+
+curl -X POST http://localhost:8000/api/query \
+  -H "Content-Type: application/json" \
+  -d '{"question": "Describe what was in the uploaded image."}'
+```
+
+### 3. Audio Query
+```bash
+curl -X POST http://localhost:8000/api/ingest \
+  -F "file=@recording.wav" -F "modality=audio"
+
+curl -X POST http://localhost:8000/api/query \
+  -H "Content-Type: application/json" \
+  -d '{"question": "What was discussed in the audio recording?"}'
+```
+
+### 4. Multi-turn Conversation
+```bash
+# Create session
+curl -X POST http://localhost:8000/api/sessions
+
+# Query with session (replace SESSION_ID)
+curl -X POST http://localhost:8000/api/query \
+  -H "Content-Type: application/json" \
+  -d '{"question": "Tell me more about that.", "session_id": "SESSION_ID"}'
+```
+
+---
+
+## 🎨 Design System (Neobrutalism)
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| Background | `#0A0A0A` | Page background |
+| Card | `#111111` | Card surfaces |
+| Accent | `#00FFAA` | Interactive elements |
+| Border | `#FFFFFF` | 2.5px solid borders |
+| Text | `#FFFFFF` | Primary text |
+| Font Display | Space Grotesk | Headings, buttons |
+| Font Mono | JetBrains Mono | Code, labels |
+| Font Body | Inter | Body text |
 
 ---
 
