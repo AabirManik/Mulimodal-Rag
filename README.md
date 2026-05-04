@@ -27,6 +27,15 @@
 
 ---
 
+## 📸 Project Screenshots
+
+<div align="center">
+  <img src="./screenshots/app-ui-1.png" alt="Multimodal RAG Interface" width="48%" />
+  <img src="./screenshots/app-ui-2.png" alt="Multimodal RAG Demo" width="48%" />
+</div>
+
+---
+
 ## 📖 What is Offline Multimodal RAG?
 
 In an era where every AI tool sends your data to the cloud, privacy and security have become major concerns for developers and enterprises alike. When you need to query sensitive PDFs, analyze private images, or transcribe confidential audio recordings, relying on cloud-based LLMs is often a non-starter.
