@@ -136,6 +136,26 @@ sequenceDiagram
     Ret->>User: Structured Response + Source References
 ```
 
+### Security & Privacy Boundary
+
+```mermaid
+graph LR
+    subgraph "🔒 Air-Gapped Local Environment (Your Machine)"
+        UI[React Frontend] <--> API[FastAPI Backend]
+        API <--> LLM[Local Ollama Models]
+        API <--> STT[Vosk Offline STT]
+        API <--> DB[(Local FAISS)]
+    end
+    Cloud[☁️ Internet / Cloud APIs] -.->|Blocked / Not Needed| API
+    
+    style Cloud fill:#ffcccc,stroke:#ff0000,stroke-width:2px,stroke-dasharray: 5 5
+    style UI fill:#e6f3ff,stroke:#0066cc
+    style API fill:#e6f3ff,stroke:#0066cc
+    style LLM fill:#e6ffe6,stroke:#00cc00
+    style STT fill:#e6ffe6,stroke:#00cc00
+    style DB fill:#e6ffe6,stroke:#00cc00
+```
+
 ---
 
 ## 🔥 Key Features
