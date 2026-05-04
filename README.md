@@ -8,6 +8,8 @@
   <img src="https://img.shields.io/badge/Frontend-React_Vite-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React Frontend" />
 
   <br />
+  <a href="https://github.com/AabirManik/Mulimodal-Rag"><img src="https://img.shields.io/badge/🎥_Watch_Demo_Video-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Demo Video" /></a>
+  <br />
   <br />
 
   <p><i>An intelligent RAG system that performs semantic retrieval and generates grounded responses using local LLMs — running entirely on your machine with zero internet dependency.</i></p>
