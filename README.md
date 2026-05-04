@@ -8,7 +8,7 @@
   <img src="https://img.shields.io/badge/Frontend-React_Vite-61DAFB?style=for-the-badge&logo=react&logoColor=black" alt="React Frontend" />
 
   <br />
-  <a href="https://github.com/AabirManik/Mulimodal-Rag"><img src="https://img.shields.io/badge/🎥_Watch_Demo_Video-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Demo Video" /></a>
+  <a href="https://drive.google.com/file/d/1AL5aEjYEW7x_Zm7uHAK_jWy4-w2Rh8bm/view?usp=sharing" target="_blank"><img src="https://img.shields.io/badge/🎥_Watch_Demo_Video-FF0000?style=for-the-badge&logo=google-drive&logoColor=white" alt="Demo Video" /></a>
   <br />
   <br />
 
@@ -261,18 +261,49 @@ Open **http://localhost:5173** in your browser.
 Rag_Model/
 ├── backend/
 │   ├── main.py              # FastAPI entry point
-│   ├── api/routes.py        # REST endpoints
-│   ├── ingest/              # Processors (PDF, Image, Audio)
-│   ├── embeddings/          # Sentence Transformers logic
-│   ├── vectorstore/         # FAISS indexing
-│   └── rag/                 # Prompt builder & LLM generation
+│   ├── config.py            # Central configuration
+│   ├── requirements.txt     # Python dependencies
+│   ├── api/
+│   │   └── routes.py        # API endpoints
+│   ├── ingest/
+│   │   ├── pdf_processor.py   # PDF text extraction + chunking
+│   │   ├── image_processor.py # LLaVA image captioning
+│   │   └── audio_processor.py # Vosk speech-to-text
+│   ├── embeddings/
+│   │   └── embedder.py      # Sentence Transformer embeddings
+│   ├── vectorstore/
+│   │   └── faiss_store.py   # FAISS index + metadata
+│   ├── rag/
+│   │   ├── retriever.py     # Similarity search
+│   │   ├── prompt_builder.py # Grounded prompt construction
+│   │   ├── generator.py     # Ollama LLM generation
+│   │   └── pipeline.py      # Full RAG orchestration
+│   └── data/                # Auto-created at runtime
+│       ├── uploads/
+│       ├── faiss_index/
+│       └── sessions/
+│
 └── frontend/
-    ├── src/
-    │   ├── components/      # UI components (Navbar, ChatArea, etc.)
-    │   ├── store/           # Zustand state management
-    │   └── index.css        # Neobrutalism design system
+    ├── index.html
     ├── vite.config.js
-    └── package.json
+    ├── package.json
+    └── src/
+        ├── main.jsx
+        ├── App.jsx
+        ├── index.css          # Neobrutalism design system
+        ├── api/
+        │   └── client.js      # Axios API client
+        ├── store/
+        │   └── chatStore.js   # Zustand state management
+        └── components/
+            ├── Navbar.jsx
+            ├── InitialView.jsx
+            ├── Sidebar.jsx
+            ├── ChatArea.jsx
+            ├── MessageBubble.jsx
+            ├── SourceCard.jsx
+            ├── InputBar.jsx
+            └── LoadingStates.jsx
 ```
 
 ---
